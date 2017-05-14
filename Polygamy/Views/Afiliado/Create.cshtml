@@ -34,6 +34,41 @@
             </div>
         </div>
         <div class="form-group">
+            <label asp-for="NumeroTelefono" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="NumeroTelefono" class="form-control" />
+                <span asp-validation-for="NumeroTelefono" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Email" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="DireccionResidencia" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="DireccionResidencia" class="form-control" />
+                <span asp-validation-for="DireccionResidencia" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="CiudadResidencia" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="CiudadResidencia" class="form-control" />
+                <span asp-validation-for="CiudadResidencia" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Cupo" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Cupo" class="form-control" />
+                <span asp-validation-for="Cupo" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Crear" class="btn btn-default" />
             </div>

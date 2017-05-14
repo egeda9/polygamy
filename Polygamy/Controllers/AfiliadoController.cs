@@ -4,24 +4,24 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Polygamy.Data;
 using Polygamy.Models;
+using System;
 
 namespace Polygamy.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class AfiliadoController : Controller
     {
-        private readonly IOptions<AppSettings> _databaseSettings;
+        private readonly AfiliadoGateway _afiliadoGateway;
 
         public AfiliadoController(IOptions<AppSettings> databaseSettings)
         {
-            _databaseSettings = databaseSettings;
+            _afiliadoGateway = new AfiliadoGateway(databaseSettings);
         }
 
         // GET: Afiliados
         public ActionResult Index()
         {
-            AfiliadoGateway afiliadoGateway = new AfiliadoGateway(_databaseSettings);
-            return View(afiliadoGateway.listar());
+            return View(_afiliadoGateway.listar());
         }
 
         // GET: Afiliados/Details/5
@@ -39,15 +39,16 @@ namespace Polygamy.Controllers
         // POST: Afiliados/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create([Bind("Id,Identificacion,Nombres,Apellidos,NumeroTelefono,Email,DireccionResidencia,CiudadResidencia,Cupo")] Afiliado afiliado)
         {
             try
             {
-                // TODO: Add insert logic here
+                _afiliadoGateway.crear(afiliado);
 
                 return RedirectToAction("Index");
             }
-            catch
+
+            catch (Exception ex)
             {
                 return View();
             }

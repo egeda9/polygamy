@@ -28,7 +28,22 @@ namespace Polygamy.Data
         /// <param name="afiliado"></param>
         public void crear(Afiliado afiliado)
         {
+            using (IDbConnection conexionSql = new SqlConnection(_databaseSettings.Value.DefaultConnection))
+            { 
+                conexionSql.Open();
 
+                string insertarPersona  = "INSERT INTO Persona(identificacion, nombres, apellidos, numeroTelefono, email, direccionResidencia, ciudadResidencia) VALUES (@Identificacion, @Nombres, @Apellidos, @NumeroTelefono, @Email, @DireccionResidencia, @CiudadResidencia); " +
+                                          "SELECT CAST(SCOPE_IDENTITY() as int)";
+                string insertarAfiliado = "INSERT INTO Afiliado(cupo, idPersona) VALUES (@Cupo, @IdPersona)";
+
+                using (IDbTransaction transaccion = conexionSql.BeginTransaction())
+                {
+                    int personaId = conexionSql.Query<int>(insertarPersona, new { Identificacion = afiliado.Identificacion, Nombres = afiliado.Nombres, Apellidos = afiliado.Apellidos, NumeroTelefono = afiliado.NumeroTelefono, Email = afiliado.Email, DireccionResidencia = afiliado.DireccionResidencia, CiudadResidencia = afiliado.CiudadResidencia }, transaccion).Single();
+                    conexionSql.Execute(insertarAfiliado, new { Cupo = afiliado.Cupo, IdPersona = personaId }, transaccion);
+                    transaccion.Commit();
+                }
+                conexionSql.Close();
+            }
         }
 
         /// 

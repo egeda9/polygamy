@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Polygamy.Data;
 using Polygamy.Models;
 
 namespace Polygamy.Controllers
@@ -19,7 +20,8 @@ namespace Polygamy.Controllers
         // GET: Beneficiarios
         public ActionResult Index()
         {
-            return View();
+            BeneficiarioGateway beneficiarioGateway = new BeneficiarioGateway(_databaseSettings);
+            return View(beneficiarioGateway.listar());
         }
 
         // GET: Beneficiarios/Details/5
