@@ -52,7 +52,10 @@ namespace Polygamy.Data
                                   " ,p.direccionResidencia" +
                                   " ,p.numeroTelefono" +
                                   " ,p.email" +
-                                  " ,a.cupo" +
+                                  " ,b.cupo" +
+                                  " ,b.fechaCompraInicio" +
+                                  " ,b.fechaCompraFin" +
+                                  " ,b.activo" +
                                   " FROM Persona p" +
                                   " INNER JOIN Beneficiario b ON b.idPersona = p.id";
 

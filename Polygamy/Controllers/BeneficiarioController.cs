@@ -7,7 +7,7 @@ using Polygamy.Models;
 
 namespace Polygamy.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class BeneficiarioController : Controller
     {
         private readonly IOptions<AppSettings> _databaseSettings;

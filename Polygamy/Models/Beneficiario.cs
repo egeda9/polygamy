@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Polygamy.Models
 {
@@ -14,49 +15,38 @@ namespace Polygamy.Models
 
         }
 
-        ~Beneficiario()
+        public bool Activo
         {
-
+            get => activo;
+            set => activo = value;
         }
 
-        public bool getActivo()
+        [DataType(DataType.Currency)]
+        [Required(ErrorMessage = "El cupo es obligatorio")]
+        public float Cupo
         {
-            return activo;
+            get => cupo;
+            set => cupo = value;
         }
 
-        public void setActivo(bool activo)
+        [DataType(DataType.Date)]
+        [Required(ErrorMessage = "La fecha de fin de compra es obligatoria")]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [Display(Name = "Fecha Final de Compra")]
+        public DateTime FechaCompraFin
         {
-            this.activo = activo;
+            get => fechaCompraFin;
+            set => fechaCompraFin = value;
         }
 
-        public float getCupo()
+        [DataType(DataType.Date)]
+        [Required(ErrorMessage = "La fecha de inicio de compra es obligatoria")]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [Display(Name = "Fecha Inicial de Compra")]
+        public DateTime FechaCompraInicio
         {
-            return cupo;
-        }
-
-        public void setCupo(float cupo)
-        {
-            this.cupo = cupo;
-        }
-
-        public DateTime getFechaCompraFin()
-        {
-            return fechaCompraFin;
-        }
-
-        public void setFechaCompraFin(DateTime DateTime)
-        {
-            this.fechaCompraFin = DateTime;
-        }
-
-        public DateTime getFechaCompraInicio()
-        {
-            return fechaCompraInicio;
-        }
-
-        public void setFechaCompraInicio(DateTime fechaCompraInicio)
-        {
-            this.fechaCompraInicio = fechaCompraInicio;
+            get => fechaCompraInicio;
+            set => fechaCompraInicio = value;
         }
     }
 }

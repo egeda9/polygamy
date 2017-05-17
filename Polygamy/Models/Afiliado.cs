@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Polygamy.Models
 {
@@ -18,6 +19,8 @@ namespace Polygamy.Models
             set => beneficiarios = value;
         }
 
+        [DataType(DataType.Currency)]
+        [Required(ErrorMessage = "El cupo es obligatorio")]
         public float Cupo
         {
             get => cupo;
