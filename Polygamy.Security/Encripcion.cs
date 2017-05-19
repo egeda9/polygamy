@@ -1,11 +1,11 @@
-﻿using System.Security.Cryptography;
+﻿    using System.Security.Cryptography;
 using System.Text;
 
 namespace Polygamy.Security
 {
-    public class Encriptar
+    public class Encripcion
     {
-        public string EncriptarContrasena(string contrasena)
+        public string encriptarContrasena(string contrasena)
         {
             byte[] data = Encoding.ASCII.GetBytes(contrasena);
             using (SHA256 sha256 = SHA256.Create())

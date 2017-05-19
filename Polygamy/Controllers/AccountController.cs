@@ -18,7 +18,7 @@ namespace Polygamy.Controllers
         private readonly ILogger _logger;
         private readonly string _externalCookieScheme;
         private UsuarioGateway _usuarioGateway;
-        private Encriptar _encriptar;
+        private Encripcion _encriptar;
 
         const string SessionKeyName = "_NombreUsuario";
 
@@ -35,7 +35,7 @@ namespace Polygamy.Controllers
             _logger = loggerFactory.CreateLogger<AccountController>();
 
             _usuarioGateway = new UsuarioGateway(databaseSettings);
-            _encriptar = new Encriptar();
+            _encriptar = new Encripcion();
         }
 
         //
@@ -67,7 +67,7 @@ namespace Polygamy.Controllers
                 return View(usuario);
             }
 
-            string contrasenaEncriptada = _encriptar.EncriptarContrasena(usuario.Contrasena);
+            string contrasenaEncriptada = _encriptar.encriptarContrasena(usuario.Contrasena);
             Usuario usuarioAlmacenado   = _usuarioGateway.obtener(contrasenaEncriptada, usuario.NombreUsuario);
 
             if (usuarioAlmacenado != null)
