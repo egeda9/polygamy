@@ -8,7 +8,7 @@ using System;
 
 namespace Polygamy.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class AfiliadoController : Controller
     {
         private readonly AfiliadoGateway _afiliadoGateway;

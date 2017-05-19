@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -11,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Polygamy.Data;
 using Polygamy.Models;
-using Polygamy.Services;
 
 namespace Polygamy
 {
@@ -49,6 +45,17 @@ namespace Polygamy
 
             services.AddMvc();
 
+            // Adds a default in-memory implementation of IDistributedCache.
+            services.AddDistributedMemoryCache();
+
+            services.AddSession(options =>
+            {
+                // Set a short timeout for easy testing.
+                options.IdleTimeout = TimeSpan.FromHours(999);
+                options.CookieHttpOnly = true;
+                options.CookieName = ".Polygamy.Session";
+            });
+
             services.Configure<AppSettings>(appSettings =>
             {
                 appSettings.DefaultConnection = Configuration["ConnectionStrings:DefaultConnection"];
@@ -73,10 +80,11 @@ namespace Polygamy
             }
 
             app.UseStaticFiles();
-
             app.UseIdentity();
 
             // Add external authentication middleware below. To configure them please see https://go.microsoft.com/fwlink/?LinkID=532715
+
+            app.UseSession();
 
             app.UseMvc(routes =>
             {

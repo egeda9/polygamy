@@ -37,10 +37,22 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-@if (SignInManager.IsSignedIn(User))
-{
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Administración</a></li>
-}
+                @if (!string.IsNullOrEmpty(Context.Session.Get<string>("_NombreUsuario")))
+                {
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="margin-right: 5px;">Administración<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a asp-area="" asp-controller="Usuario" asp-action="Index">Usuario</a></li>
+                            <li><a asp-area="" asp-controller="Afiliado" asp-action="Index">Afiliado</a></li>
+                            <li><a asp-area="" asp-controller="Beneficiario" asp-action="Index">Beneficiario</a></li>
+                            <li><a asp-area="" asp-controller="Supermercado" asp-action="Index">Supermercado</a></li>
+                            <li><a asp-area="" asp-controller="Administrador" asp-action="Index">Administrador</a></li>
+                        </ul>
+                    </li>
+
+                    <li><a asp-area="" asp-controller="Compra" asp-action="Index">Validar Prerrequisitos de compra</a></li>
+                    <li><a asp-area="" asp-controller="Reporte" asp-action="Index">Generar reporte</a></li>
+                }
                     <li><a asp-area="" asp-controller="Home" asp-action="About">Acerca de</a></li>
                 </ul>
                 @await Html.PartialAsync("_LoginPartial")

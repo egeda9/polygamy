@@ -1,64 +1,49 @@
-﻿namespace Polygamy.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
+
+namespace Polygamy.Models
 {
     public class Usuario : Persona
     {
-        public string contrasena;
-        public string nombreUsuario;
-        public Rol rol;
+        private string contrasena;
+        private string nombreUsuario;
+        private Rol rol;
+
+        private string regexPassword = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,15}$";
 
         public Usuario()
         {
 
         }
 
-        ~Usuario()
+        [Display(Name = "Contraseña")]
+        [Required(ErrorMessage = "La contraseña es obligatoria")]
+        public string Contrasena
         {
+            get => contrasena;
+            set => contrasena = value;
+        }
 
+        [Display(Name = "Nombre de Usuario")]
+        [Required(ErrorMessage = "El Nombre de Usuario es obligatorio")]
+        public string NombreUsuario
+        {
+            get => nombreUsuario;
+            set => nombreUsuario = value;
+        }
+
+        public Rol Rol
+        {
+            get => rol;
+            set => rol = value;
         }
 
         /// 
         /// <param name="contrasena"></param>
-        public bool comprobarContrasenaSegura(string contrasena)
+        public bool comprobarContrasenaSegura()
         {
-            return false;
-        }
-
-        /// 
-        /// <param name="contrasena"></param>
-        /// <param name="usuario"></param>
-        public bool comprobarUsuarioYContrasena(string contrasena, string usuario)
-        {
-            return false;
-        }
-
-        public string getContrasena()
-        {
-            return contrasena;
-        }
-
-        public void setContrasena(string contrasena)
-        {
-            this.contrasena = contrasena;
-        }
-
-        public string getNombreUsuario()
-        {
-            return nombreUsuario;
-        }
-
-        public void setNombreUsuario(string nombreUsuario)
-        {
-            this.nombreUsuario = nombreUsuario;
-        }
-
-        public Rol getRol()
-        {
-            return rol;
-        }
-
-        public void setRol(Rol rol)
-        {
-            this.rol = rol;
+            Regex regex = new Regex(regexPassword);
+            return regex.IsMatch(contrasena);
         }
     }
 }
