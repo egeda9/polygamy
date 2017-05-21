@@ -5,12 +5,6 @@ namespace Polygamy.Models
 {
     public class Usuario : Persona
     {
-        private string contrasena;
-        private string nombreUsuario;
-        private Rol rol;
-
-        private string regexPassword = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,15}$";
-
         public Usuario()
         {
 
@@ -18,25 +12,15 @@ namespace Polygamy.Models
 
         [Display(Name = "Contraseña")]
         [Required(ErrorMessage = "La contraseña es obligatoria")]
-        public string Contrasena
-        {
-            get => contrasena;
-            set => contrasena = value;
-        }
+        public string contrasena { get; set; }
 
         [Display(Name = "Nombre de Usuario")]
         [Required(ErrorMessage = "El Nombre de Usuario es obligatorio")]
-        public string NombreUsuario
-        {
-            get => nombreUsuario;
-            set => nombreUsuario = value;
-        }
+        public string nombreUsuario { get; set; }
 
-        public Rol Rol
-        {
-            get => rol;
-            set => rol = value;
-        }
+        public Rol rol { get; set; }
+
+        private const string regexPassword = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,15}$";
 
         /// 
         /// <param name="contrasena"></param>

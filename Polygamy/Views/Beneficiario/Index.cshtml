@@ -1,18 +1,18 @@
-@model IEnumerable<Polygamy.Models.Beneficiario>
+@model IEnumerable<Beneficiario>
 
-@{
-    ViewData["Title"] = "Beneficiario";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
+    @{
+        ViewData["Title"] = "Beneficiario";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
 
-<h2>Beneficiario</h2>
+    <h2>Beneficiario</h2>
 
-<p>
-    <a asp-action="Create">Crear Nuevo</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
+    <p>
+        <a asp-action="Create">Crear Nuevo</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
                 <th>
                     Identificaci&oacute;n
                 </th>
@@ -46,45 +46,46 @@
                 <th>
                     Activo
                 </th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Identificacion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nombres)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Apellidos)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NumeroTelefono)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DireccionResidencia)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CiudadResidencia)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Cupo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FechaCompraInicio)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FechaCompraFin)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Activo)
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.identificacion)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.nombres)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.apellidos)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.numeroTelefono)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.direccionResidencia)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ciudadResidencia)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.cupo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.fechaCompraInicio)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.fechaCompraFin)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.activo)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>

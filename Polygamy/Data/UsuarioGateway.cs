@@ -43,7 +43,7 @@ namespace Polygamy.Data
         public List<Usuario> listar()
         {
             List<Usuario> usuarios = new List<Usuario>();
-            using (IDbConnection conexionSql = new SqlConnection(_databaseSettings.Value.DefaultConnection))
+            using (IDbConnection conexionSql = new SqlConnection(_databaseSettings.Value.defaultConnection))
             {
                 conexionSql.Open();
                 string consulta = "SELECT p.id" +
@@ -78,7 +78,7 @@ namespace Polygamy.Data
         public Usuario obtener(string contrasena, string nombreUsuario)
         {
             Usuario usuario;
-            using (IDbConnection conexionSql = new SqlConnection(_databaseSettings.Value.DefaultConnection))
+            using (IDbConnection conexionSql = new SqlConnection(_databaseSettings.Value.defaultConnection))
             {
                 conexionSql.Open();
                 string consulta = "SELECT p.id" +

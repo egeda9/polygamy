@@ -1,27 +1,30 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
 using Polygamy.Data;
 using Polygamy.Models;
+using System;
+using System.Globalization;
 
 namespace Polygamy.Controllers
 {
     //[Authorize]
     public class BeneficiarioController : Controller
     {
-        private readonly IOptions<AppSettings> _databaseSettings;
+        private BeneficiarioGateway _beneficiarioGateway;
+        private AfiliadoGateway _afiliadoGateway;
 
         public BeneficiarioController(IOptions<AppSettings> databaseSettings)
         {
-            _databaseSettings = databaseSettings;
+            _beneficiarioGateway = new BeneficiarioGateway(databaseSettings);
+            _afiliadoGateway = new AfiliadoGateway(databaseSettings);
         }
 
         // GET: Beneficiarios
         public ActionResult Index()
         {
-            BeneficiarioGateway beneficiarioGateway = new BeneficiarioGateway(_databaseSettings);
-            return View(beneficiarioGateway.listar());
+            return View(_beneficiarioGateway.listar());
         }
 
         // GET: Beneficiarios/Details/5
@@ -33,6 +36,7 @@ namespace Polygamy.Controllers
         // GET: Beneficiarios/Create
         public ActionResult Create()
         {
+            ViewBag.Afiliados = new SelectList(_afiliadoGateway.listar(), "id", "nombres");
             return View();
         }
 
@@ -43,11 +47,29 @@ namespace Polygamy.Controllers
         {
             try
             {
-                // TODO: Add insert logic here
+                Afiliado afiliado =_afiliadoGateway.obtener(Convert.ToInt32(collection["afiliado"]));
 
+                Beneficiario beneficiario = new Beneficiario
+                {
+                    activo = Convert.ToBoolean(collection["activo"].ToString().Split(',')[0]),
+                    apellidos = collection["apellidos"],
+                    ciudadResidencia = collection["ciudadResidencia"],
+                    cupo = float.Parse(collection["cupo"], CultureInfo.InvariantCulture.NumberFormat),
+                    direccionResidencia = collection["direccionResidencia"],
+                    email = collection["email"],
+                    nombres = collection["nombres"],
+                    identificacion = Convert.ToInt32(collection["identificacion"]),
+                    numeroTelefono = Convert.ToInt64(collection["numeroTelefono"]),
+                    fechaCompraFin = Convert.ToDateTime(collection["fechaCompraFin"]),
+                    fechaCompraInicio = Convert.ToDateTime(collection["fechaCompraInicio"]),
+                    id = Convert.ToInt32(collection["id"]),
+                    afiliado = afiliado
+                };
+
+                _beneficiarioGateway.crear(beneficiario);
                 return RedirectToAction("Index");
             }
-            catch
+            catch (Exception ex)
             {
                 return View();
             }

@@ -35,7 +35,7 @@
                     Ciudad de Residencia
                 </th>
                 <th>
-                    Cupo
+                    Cupo (COP)
                 </th>
         </tr>
     </thead>
@@ -43,28 +43,28 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Identificacion)
+                @Html.DisplayFor(modelItem => item.identificacion)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Nombres)
+                @Html.DisplayFor(modelItem => item.nombres)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Apellidos)
+                @Html.DisplayFor(modelItem => item.apellidos)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.NumeroTelefono)
+                @Html.DisplayFor(modelItem => item.numeroTelefono)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Email)
+                @Html.DisplayFor(modelItem => item.email)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DireccionResidencia)
+                @Html.DisplayFor(modelItem => item.direccionResidencia)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CiudadResidencia)
+                @Html.DisplayFor(modelItem => item.ciudadResidencia)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Cupo)
+                @Html.DisplayFor(modelItem => item.cupo)
             </td>
         </tr>
 }

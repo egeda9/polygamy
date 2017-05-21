@@ -67,13 +67,13 @@ namespace Polygamy.Controllers
                 return View(usuario);
             }
 
-            string contrasenaEncriptada = _encriptar.encriptarContrasena(usuario.Contrasena);
-            Usuario usuarioAlmacenado   = _usuarioGateway.obtener(contrasenaEncriptada, usuario.NombreUsuario);
+            string contrasenaEncriptada = _encriptar.encriptarContrasena(usuario.contrasena);
+            Usuario usuarioAlmacenado   = _usuarioGateway.obtener(contrasenaEncriptada, usuario.nombreUsuario);
 
             if (usuarioAlmacenado != null)
             {
                 _logger.LogInformation(1, "Usuario válido");
-                if (HttpContext.Session != null) HttpContext.Session.Set(SessionKeyName, usuario.NombreUsuario);
+                if (HttpContext.Session != null) HttpContext.Session.Set(SessionKeyName, usuario.nombreUsuario);
                 return RedirectToLocal(returnUrl);
             }
 

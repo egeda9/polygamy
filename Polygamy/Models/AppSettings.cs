@@ -2,12 +2,6 @@
 {
     public class AppSettings
     {
-        private string defaultConnection;
-
-        public string DefaultConnection
-        {
-            get => defaultConnection;
-            set => defaultConnection = value;
-        }
+        public string defaultConnection { get; set; }
     }
 }

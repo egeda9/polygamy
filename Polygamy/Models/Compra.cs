@@ -5,33 +5,22 @@ namespace Polygamy.Models
 {
     public class Compra
     {
-        private Beneficiario beneficiario;
-        private List<CompraDetalle> compraDetalles;
-        private DateTime fecha;
-        private int id;
-        private Supermercado supermercado;
-        private float total;
-
         public Compra()
         {
 
         }
 
-        ~Compra()
-        {
-
-        }
-
-        public virtual void Dispose()
-        {
-
-        }
+        public Beneficiario beneficiario { get; set; }
+        public List<CompraDetalle> compraDetalles { get; set; }
+        public DateTime fecha { get; set; }
+        public int id { get; set; }
+        public Supermercado supermercado { get; set; }
+        public float total { get; set; }
 
         /// 
         /// <param name="compraDetalle"></param>
         public List<CompraDetalle> agregarCompraDetalle(CompraDetalle compraDetalle)
         {
-
             return null;
         }
 
@@ -48,66 +37,6 @@ namespace Polygamy.Models
         public List<CompraDetalle> removerCompraDetalle(CompraDetalle compraDetalle)
         {
             return null;
-        }
-
-        public Beneficiario getBeneficiario()
-        {
-            return beneficiario;
-        }
-
-        public void setBeneficiario(Beneficiario beneficiario)
-        {
-            this.beneficiario = beneficiario;
-        }
-
-        public DateTime getFecha()
-        {
-            return fecha;
-        }
-
-        public void setFecha(DateTime fecha)
-        {
-            this.fecha = fecha;
-        }
-
-        public int getId()
-        {
-            return id;
-        }
-
-        public void setId(int id)
-        {
-            this.id = id;
-        }
-
-        public Supermercado getSupermercado()
-        {
-            return supermercado;
-        }
-
-        public void setSupermercado(Supermercado supermercado)
-        {
-            this.supermercado = supermercado;
-        }
-
-        public float getTotal()
-        {
-            return total;
-        }
-
-        public void setTotal(float total)
-        {
-            this.total = total;
-        }
-
-        public List<CompraDetalle> getCompraDetalles()
-        {
-            return compraDetalles;
-        }
-
-        public void setCompraDetalles(List<CompraDetalle> compraDetalles)
-        {
-            this.compraDetalles = compraDetalles;
         }
     }
 }

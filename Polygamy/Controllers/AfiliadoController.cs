@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -8,7 +7,6 @@ using System;
 
 namespace Polygamy.Controllers
 {
-    [Authorize]
     public class AfiliadoController : Controller
     {
         private readonly AfiliadoGateway _afiliadoGateway;
@@ -39,12 +37,11 @@ namespace Polygamy.Controllers
         // POST: Afiliados/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind("Id,Identificacion,Nombres,Apellidos,NumeroTelefono,Email,DireccionResidencia,CiudadResidencia,Cupo")] Afiliado afiliado)
+        public ActionResult Create([Bind("id,identificacion,nombres,apellidos,numeroTelefono,email,direccionResidencia,ciudadResidencia,cupo")] Afiliado afiliado)
         {
             try
             {
                 _afiliadoGateway.crear(afiliado);
-
                 return RedirectToAction("Index");
             }
 

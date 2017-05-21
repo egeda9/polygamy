@@ -58,7 +58,7 @@ namespace Polygamy
 
             services.Configure<AppSettings>(appSettings =>
             {
-                appSettings.DefaultConnection = Configuration["ConnectionStrings:DefaultConnection"];
+                appSettings.defaultConnection = Configuration["ConnectionStrings:DefaultConnection"];
             });
         }
 

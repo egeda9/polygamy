@@ -28,7 +28,7 @@ namespace Polygamy.Data
         /// <param name="afiliado"></param>
         public void crear(Afiliado afiliado)
         {
-            using (IDbConnection conexionSql = new SqlConnection(_databaseSettings.Value.DefaultConnection))
+            using (IDbConnection conexionSql = new SqlConnection(_databaseSettings.Value.defaultConnection))
             { 
                 conexionSql.Open();
 
@@ -38,8 +38,8 @@ namespace Polygamy.Data
 
                 using (IDbTransaction transaccion = conexionSql.BeginTransaction())
                 {
-                    int personaId = conexionSql.Query<int>(insertarPersona, new { Identificacion = afiliado.Identificacion, Nombres = afiliado.Nombres, Apellidos = afiliado.Apellidos, NumeroTelefono = afiliado.NumeroTelefono, Email = afiliado.Email, DireccionResidencia = afiliado.DireccionResidencia, CiudadResidencia = afiliado.CiudadResidencia }, transaccion).Single();
-                    conexionSql.Execute(insertarAfiliado, new { Cupo = afiliado.Cupo, IdPersona = personaId }, transaccion);
+                    int personaId = conexionSql.Query<int>(insertarPersona, new { Identificacion = afiliado.identificacion, Nombres = afiliado.nombres, Apellidos = afiliado.apellidos, NumeroTelefono = afiliado.numeroTelefono, Email = afiliado.email, DireccionResidencia = afiliado.direccionResidencia, CiudadResidencia = afiliado.ciudadResidencia }, transaccion).Single();
+                    conexionSql.Execute(insertarAfiliado, new { Cupo = afiliado.cupo, IdPersona = personaId }, transaccion);
                     transaccion.Commit();
                 }
                 conexionSql.Close();
@@ -56,7 +56,7 @@ namespace Polygamy.Data
         public List<Afiliado> listar()
         {
             List<Afiliado> afiliados = new List<Afiliado>();
-            using (IDbConnection conexionSql = new SqlConnection(_databaseSettings.Value.DefaultConnection))
+            using (IDbConnection conexionSql = new SqlConnection(_databaseSettings.Value.defaultConnection))
             {
                 conexionSql.Open();
                 string consulta = "SELECT p.id" +
@@ -81,7 +81,29 @@ namespace Polygamy.Data
         /// <param name="id"></param>
         public Afiliado obtener(int id)
         {
-            return null;
+            Afiliado afiliado;
+            using (IDbConnection conexionSql = new SqlConnection(_databaseSettings.Value.defaultConnection))
+            {
+                conexionSql.Open();
+                string consulta = "SELECT p.id" +
+                                  " ,p.identificacion" +
+                                  " ,p.nombres" +
+                                  " ,p.apellidos" +
+                                  " ,p.ciudadResidencia" +
+                                  " ,p.direccionResidencia" +
+                                  " ,p.numeroTelefono" +
+                                  " ,p.email" +
+                                  " ,a.cupo" +
+                                  " ,a.id AS idAfiliado" +
+                                  " FROM Persona p" +
+                                  " INNER JOIN Afiliado a ON a.idPersona = p.id" +
+                                  " WHERE p.id = @Id";
+
+                List<Afiliado> afiliados = conexionSql.Query<Afiliado>(consulta, new { Id = id }).ToList();
+                afiliado = afiliados.FirstOrDefault();
+                conexionSql.Close();
+            }
+            return afiliado;
         }
     }
 }

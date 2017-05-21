@@ -5,27 +5,19 @@ namespace Polygamy.Models
 {
     public class Afiliado : Persona
     {
-        private List<Beneficiario> beneficiarios;
-        private float cupo;
-
         public Afiliado()
         {
 
         }
 
-        public List<Beneficiario> Beneficiarios
-        {
-            get => beneficiarios;
-            set => beneficiarios = value;
-        }
+        public int idAfiliado { get; set; }
 
-        [DataType(DataType.Currency)]
+        public List<Beneficiario> beneficiarios { get; set; }
+
+        [Display(Name = "Cupo (COP)")]
+        [DisplayFormat(DataFormatString = "{0:F2}")]
         [Required(ErrorMessage = "El cupo es obligatorio")]
-        public float Cupo
-        {
-            get => cupo;
-            set => cupo = value;
-        }
+        public float cupo { get; set; }
 
         /// 
         /// <param name="beneficiario"></param>
