@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Microsoft.Extensions.Options;
 using Polygamy.Models;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -19,38 +20,50 @@ namespace Polygamy.Data
 
         /// 
         /// <param name="beneficiario"></param>
-        public void actualizar(Beneficiario beneficiario)
+        public bool actualizar(Beneficiario beneficiario)
         {
-
+            return true;
         }
 
         /// 
         /// <param name="beneficiario"></param>
-        public void crear(Beneficiario beneficiario)
+        public bool crear(Beneficiario beneficiario)
         {
-            using (IDbConnection conexionSql = new SqlConnection(_databaseSettings.Value.defaultConnection))
+            bool resultadoProceso = false;
+            try
             {
-                conexionSql.Open();
-
-                string insertarPersona = "INSERT INTO Persona(identificacion, nombres, apellidos, numeroTelefono, email, direccionResidencia, ciudadResidencia) VALUES (@Identificacion, @Nombres, @Apellidos, @NumeroTelefono, @Email, @DireccionResidencia, @CiudadResidencia); " +
-                                          "SELECT CAST(SCOPE_IDENTITY() as int)";
-                string insertarAfiliado = "INSERT INTO Beneficiario(cupo, fechaCompraInicio, fechaCompraFin, idAfiliado, idPersona, activo) VALUES (@Cupo, @FechaCompraInicio, @FechaCompraFin, @IdAfiliado, @IdPersona, @Activo)";
-
-                using (IDbTransaction transaccion = conexionSql.BeginTransaction())
+                using (IDbConnection conexionSql = new SqlConnection(_databaseSettings.Value.defaultConnection))
                 {
-                    int personaId = conexionSql.Query<int>(insertarPersona, new { Identificacion = beneficiario.identificacion, Nombres = beneficiario.nombres, Apellidos = beneficiario.apellidos, NumeroTelefono = beneficiario.numeroTelefono, Email = beneficiario.email, DireccionResidencia = beneficiario.direccionResidencia, CiudadResidencia = beneficiario.ciudadResidencia }, transaccion).Single();
-                    conexionSql.Execute(insertarAfiliado, new { Cupo = beneficiario.cupo, FechaCompraInicio = beneficiario.fechaCompraInicio, FechaCompraFin = beneficiario.fechaCompraFin, IdAfiliado = beneficiario.afiliado.idAfiliado, IdPersona = personaId, Activo = beneficiario.activo }, transaccion);
-                    transaccion.Commit();
+                    conexionSql.Open();
+
+                    string insertarPersona = "INSERT INTO Persona(identificacion, nombres, apellidos, numeroTelefono, email, direccionResidencia, ciudadResidencia) VALUES (@Identificacion, @Nombres, @Apellidos, @NumeroTelefono, @Email, @DireccionResidencia, @CiudadResidencia); " +
+                                              "SELECT CAST(SCOPE_IDENTITY() as int)";
+                    string insertarAfiliado = "INSERT INTO Beneficiario(cupo, fechaCompraInicio, fechaCompraFin, idAfiliado, idPersona, activo) VALUES (@Cupo, @FechaCompraInicio, @FechaCompraFin, @IdAfiliado, @IdPersona, @Activo)";
+
+                    using (IDbTransaction transaccion = conexionSql.BeginTransaction())
+                    {
+                        int personaId = conexionSql.Query<int>(insertarPersona, new { Identificacion = beneficiario.identificacion, Nombres = beneficiario.nombres, Apellidos = beneficiario.apellidos, NumeroTelefono = beneficiario.numeroTelefono, Email = beneficiario.email, DireccionResidencia = beneficiario.direccionResidencia, CiudadResidencia = beneficiario.ciudadResidencia }, transaccion).Single();
+                        conexionSql.Execute(insertarAfiliado, new { Cupo = beneficiario.cupo, FechaCompraInicio = beneficiario.fechaCompraInicio, FechaCompraFin = beneficiario.fechaCompraFin, IdAfiliado = beneficiario.afiliado.idAfiliado, IdPersona = personaId, Activo = beneficiario.activo }, transaccion);
+                        transaccion.Commit();
+                    }
+                    conexionSql.Close();
+
+                    resultadoProceso = true;
                 }
-                conexionSql.Close();
             }
+
+            catch(Exception ex)
+            {
+                resultadoProceso = false;
+            }
+            return resultadoProceso;
         }
 
         /// 
         /// <param name="id"></param>
-        public void eliminar(int id)
+        public bool eliminar(int id)
         {
-
+            return true;
         }
 
         public List<Beneficiario> listar()
@@ -68,13 +81,26 @@ namespace Polygamy.Data
                                   " ,p.numeroTelefono" +
                                   " ,p.email" +
                                   " ,b.cupo" +
+                                  " ,b.id AS idBeneficiario" +
                                   " ,b.fechaCompraInicio" +
                                   " ,b.fechaCompraFin" +
                                   " ,b.activo" +
+                                  " ,p1.id" +
+                                  " ,p1.identificacion" +
+                                  " ,p1.nombres" +
+                                  " ,p1.apellidos" +
+                                  " ,p1.ciudadResidencia" +
+                                  " ,p1.direccionResidencia" +
+                                  " ,p1.numeroTelefono" +
+                                  " ,p1.email" +
+                                  " ,a.cupo" +
+                                  " ,a.id AS idAfiliado" +
                                   " FROM Persona p" +
-                                  " INNER JOIN Beneficiario b ON b.idPersona = p.id";
+                                  " INNER JOIN Beneficiario b ON b.idPersona = p.id" +
+                                  " INNER JOIN Afiliado a ON a.id = b.idAfiliado" +
+                                  " INNER JOIN Persona p1 ON p1.id = a.idPersona";
 
-                beneficiarios = conexionSql.Query<Beneficiario>(consulta).ToList();
+                beneficiarios = conexionSql.Query<Beneficiario, Afiliado, Beneficiario>(consulta, (b, a) => { b.afiliado = a; return b; }).ToList();
                 conexionSql.Close();
             }
             return beneficiarios;

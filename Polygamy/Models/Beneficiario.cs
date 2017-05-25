@@ -10,6 +10,8 @@ namespace Polygamy.Models
 
         }
 
+        public int idBeneficiario { get; set; }
+
         [Display(Name = "Activo")]
         public bool activo { get; set; }
 

@@ -29,13 +29,7 @@
                     Email
                 </th>
                 <th>
-                    Direcci&oacute;n de Residencia
-                </th>
-                <th>
-                    Ciudad de Residencia
-                </th>
-                <th>
-                    Cupo
+                    Cupo (COP)
                 </th>
                 <th>
                     Fecha Compra Inicio
@@ -45,6 +39,9 @@
                 </th>
                 <th>
                     Activo
+                </th>
+                <th>
+                    Afiliado
                 </th>
             </tr>
         </thead>
@@ -68,12 +65,6 @@
                         @Html.DisplayFor(modelItem => item.email)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.direccionResidencia)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ciudadResidencia)
-                    </td>
-                    <td>
                         @Html.DisplayFor(modelItem => item.cupo)
                     </td>
                     <td>
@@ -84,6 +75,9 @@
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.activo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.afiliado.nombres)
                     </td>
                 </tr>
             }

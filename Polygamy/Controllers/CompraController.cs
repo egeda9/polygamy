@@ -1,63 +1,40 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using Polygamy.Data;
-using Polygamy.Models;
-using System;
 
 namespace Polygamy.Controllers
 {
-    public class AfiliadoController : Controller
+    public class CompraController : Controller
     {
-        private readonly AfiliadoGateway _afiliadoGateway;
-
-        public AfiliadoController(IOptions<AppSettings> databaseSettings)
-        {
-            _afiliadoGateway = new AfiliadoGateway(databaseSettings);
-        }
-
-        // GET: Afiliados
+        // GET: Compra
         public ActionResult Index()
         {
-            return View(_afiliadoGateway.listar());
-        }
-
-        // GET: Afiliados/Details/5
-        public ActionResult Details(int id)
-        {
             return View();
         }
 
-        // GET: Afiliados/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Afiliados/Create
+        // POST: Compra/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind("id,identificacion,nombres,apellidos,numeroTelefono,email,direccionResidencia,ciudadResidencia,cupo")] Afiliado afiliado)
+        public ActionResult Validar(IFormCollection collection)
         {
             try
             {
-                bool resultadoProceso = _afiliadoGateway.crear(afiliado);
+                // TODO: Add insert logic here
+
                 return RedirectToAction("Index");
             }
-
-            catch (Exception ex)
+            catch
             {
                 return View();
             }
         }
 
-        // GET: Afiliados/Edit/5
+        // GET: Compra/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: Afiliados/Edit/5
+        // POST: Compra/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
@@ -74,13 +51,13 @@ namespace Polygamy.Controllers
             }
         }
 
-        // GET: Afiliados/Delete/5
+        // GET: Compra/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: Afiliados/Delete/5
+        // POST: Compra/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)
