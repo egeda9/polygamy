@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Polygamy.Models
 {
@@ -14,8 +15,10 @@ namespace Polygamy.Models
         public List<CompraDetalle> compraDetalles { get; set; }
         public DateTime fecha { get; set; }
         public int id { get; set; }
-        public Supermercado supermercado { get; set; }
         public float total { get; set; }
+
+        [Display(Name = "Supermercado")]
+        public Supermercado supermercado { get; set; }        
 
         /// 
         /// <param name="compraDetalle"></param>

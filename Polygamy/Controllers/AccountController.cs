@@ -63,7 +63,9 @@ namespace Polygamy.Controllers
             bool formatoContrasenaValida = usuario.comprobarContrasenaSegura();
             if (!formatoContrasenaValida)
             {
-                ModelState.AddModelError(string.Empty, "Formato de Contraseña Inválida");
+                ViewBag.Messages = new[] {
+                    new AlertViewModel("danger", "Error", "Formato de Contraseña Inválida")
+                };
                 return View(usuario);
             }
 
@@ -79,7 +81,9 @@ namespace Polygamy.Controllers
 
             else
             {
-                ModelState.AddModelError(string.Empty, "Usuario o contraseña inválidos");
+                ViewBag.Messages = new[] {
+                    new AlertViewModel("danger", "Error", "Usuario o contraseña inválidos")
+                };
                 return View(usuario);
             }
         }

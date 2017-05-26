@@ -1,54 +1,23 @@
-﻿namespace Polygamy.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Polygamy.Models
 {
     public class CompraDetalle
     {
-        private int cantidad;
-        private int id;
-        private Producto producto;
-
         public CompraDetalle()
         {
 
         }
 
-        ~CompraDetalle()
-        {
+        [Display(Name = "Cantidad")]
+        [Required(ErrorMessage = "La cantidad es obligatoria")]
+        public int cantidad { get; set; }
 
-        }
+        public int id { get; set; }
 
-        public virtual void Dispose()
-        {
+        [Display(Name = "Producto")]
+        public Producto producto { get; set; }
 
-        }
-
-        public int getCantidad()
-        {
-            return cantidad;
-        }
-
-        public void setCantidad(int cantidad)
-        {
-            this.cantidad = cantidad;
-        }
-
-        public int getId()
-        {
-            return id;
-        }
-
-        public void setId(int id)
-        {
-            this.id = id;
-        }
-
-        public Producto getProducto()
-        {
-            return producto;
-        }
-
-        public void setProducto(Producto producto)
-        {
-            this.producto = producto;
-        }
+        public Compra compra { get; set; }
     }
 }

@@ -20,16 +20,16 @@ namespace Polygamy.Data
 
         /// 
         /// <param name="beneficiario"></param>
-        public bool actualizar(Beneficiario beneficiario)
+        public Beneficiario actualizar(Beneficiario beneficiario)
         {
-            return true;
+            return new Beneficiario();
         }
 
         /// 
         /// <param name="beneficiario"></param>
-        public bool crear(Beneficiario beneficiario)
+        public int crear(Beneficiario beneficiario)
         {
-            bool resultadoProceso = false;
+            int personaId = 0;
             try
             {
                 using (IDbConnection conexionSql = new SqlConnection(_databaseSettings.Value.defaultConnection))
@@ -42,21 +42,19 @@ namespace Polygamy.Data
 
                     using (IDbTransaction transaccion = conexionSql.BeginTransaction())
                     {
-                        int personaId = conexionSql.Query<int>(insertarPersona, new { Identificacion = beneficiario.identificacion, Nombres = beneficiario.nombres, Apellidos = beneficiario.apellidos, NumeroTelefono = beneficiario.numeroTelefono, Email = beneficiario.email, DireccionResidencia = beneficiario.direccionResidencia, CiudadResidencia = beneficiario.ciudadResidencia }, transaccion).Single();
+                        personaId = conexionSql.Query<int>(insertarPersona, new { Identificacion = beneficiario.identificacion, Nombres = beneficiario.nombres, Apellidos = beneficiario.apellidos, NumeroTelefono = beneficiario.numeroTelefono, Email = beneficiario.email, DireccionResidencia = beneficiario.direccionResidencia, CiudadResidencia = beneficiario.ciudadResidencia }, transaccion).Single();
                         conexionSql.Execute(insertarAfiliado, new { Cupo = beneficiario.cupo, FechaCompraInicio = beneficiario.fechaCompraInicio, FechaCompraFin = beneficiario.fechaCompraFin, IdAfiliado = beneficiario.afiliado.idAfiliado, IdPersona = personaId, Activo = beneficiario.activo }, transaccion);
                         transaccion.Commit();
                     }
                     conexionSql.Close();
-
-                    resultadoProceso = true;
                 }
             }
 
             catch(Exception ex)
             {
-                resultadoProceso = false;
+                
             }
-            return resultadoProceso;
+            return personaId;
         }
 
         /// 
@@ -108,9 +106,90 @@ namespace Polygamy.Data
 
         /// 
         /// <param name="id"></param>
-        public Beneficiario obtener(int id)
+        public Beneficiario obtenerPorIdentificacion(int identificacion)
         {
-            return null;
+            Beneficiario beneficiario;
+            using (IDbConnection conexionSql = new SqlConnection(_databaseSettings.Value.defaultConnection))
+            {
+                conexionSql.Open();
+                string consulta = "SELECT p.id" +
+                                  " ,p.identificacion" +
+                                  " ,p.nombres" +
+                                  " ,p.apellidos" +
+                                  " ,p.ciudadResidencia" +
+                                  " ,p.direccionResidencia" +
+                                  " ,p.numeroTelefono" +
+                                  " ,p.email" +
+                                  " ,b.cupo" +
+                                  " ,b.id AS idBeneficiario" +
+                                  " ,b.fechaCompraInicio" +
+                                  " ,b.fechaCompraFin" +
+                                  " ,b.activo" +
+                                  " ,p1.id" +
+                                  " ,p1.identificacion" +
+                                  " ,p1.nombres" +
+                                  " ,p1.apellidos" +
+                                  " ,p1.ciudadResidencia" +
+                                  " ,p1.direccionResidencia" +
+                                  " ,p1.numeroTelefono" +
+                                  " ,p1.email" +
+                                  " ,a.cupo" +
+                                  " ,a.id AS idAfiliado" +
+                                  " FROM Beneficiario b" +
+                                  " INNER JOIN Persona p ON b.idPersona = p.id" +
+                                  " INNER JOIN Afiliado a ON a.id = b.idAfiliado" +
+                                  " INNER JOIN Persona p1 ON p1.id = a.idPersona" +
+                                  " WHERE p.identificacion = @Identificacion";
+
+                List<Beneficiario> beneficiarios = beneficiarios = conexionSql.Query<Beneficiario, Afiliado, Beneficiario>(consulta, (b, a) => { b.afiliado = a; return b; }, new { Identificacion = identificacion }).ToList();
+                beneficiario = beneficiarios.FirstOrDefault();
+                conexionSql.Close();
+            }
+            return beneficiario;
+        }
+
+        /// 
+        /// <param name="id"></param>
+        public Beneficiario obtenerPorId(int idBeneficiario)
+        {
+            Beneficiario beneficiario;
+            using (IDbConnection conexionSql = new SqlConnection(_databaseSettings.Value.defaultConnection))
+            {
+                conexionSql.Open();
+                string consulta = "SELECT p.id" +
+                                  " ,p.identificacion" +
+                                  " ,p.nombres" +
+                                  " ,p.apellidos" +
+                                  " ,p.ciudadResidencia" +
+                                  " ,p.direccionResidencia" +
+                                  " ,p.numeroTelefono" +
+                                  " ,p.email" +
+                                  " ,b.cupo" +
+                                  " ,b.id AS idBeneficiario" +
+                                  " ,b.fechaCompraInicio" +
+                                  " ,b.fechaCompraFin" +
+                                  " ,b.activo" +
+                                  " ,p1.id" +
+                                  " ,p1.identificacion" +
+                                  " ,p1.nombres" +
+                                  " ,p1.apellidos" +
+                                  " ,p1.ciudadResidencia" +
+                                  " ,p1.direccionResidencia" +
+                                  " ,p1.numeroTelefono" +
+                                  " ,p1.email" +
+                                  " ,a.cupo" +
+                                  " ,a.id AS idAfiliado" +
+                                  " FROM Beneficiario b" +
+                                  " INNER JOIN Persona p ON b.idPersona = p.id" +
+                                  " INNER JOIN Afiliado a ON a.id = b.idAfiliado" +
+                                  " INNER JOIN Persona p1 ON p1.id = a.idPersona" +
+                                  " WHERE b.id = @IdBeneficiario";
+
+                List<Beneficiario> beneficiarios = beneficiarios = conexionSql.Query<Beneficiario, Afiliado, Beneficiario>(consulta, (b, a) => { b.afiliado = a; return b; }, new { IdBeneficiario = idBeneficiario }).ToList();
+                beneficiario = beneficiarios.FirstOrDefault();
+                conexionSql.Close();
+            }
+            return beneficiario;
         }
     }
 }
