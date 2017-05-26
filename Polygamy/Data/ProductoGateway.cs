@@ -38,9 +38,23 @@ namespace Polygamy.Data
          * 
          * @param codigo
          */
-        public Producto obtener(int codigo)
+        public Producto obtener(int id)
         {
-            return null;
+            Producto producto;
+            using (IDbConnection conexionSql = new SqlConnection(_databaseSettings.Value.defaultConnection))
+            {
+                conexionSql.Open();
+                string consulta = "SELECT p.id" +
+                                  " ,p.descripcion" +
+                                  " ,p.precioUnitario" +
+                                  " FROM Producto p" +
+                                  " WHERE p.id = @Id";
+
+                List<Producto> productos = conexionSql.Query<Producto>(consulta, new { Id = id }).ToList();
+                producto = productos.FirstOrDefault();
+                conexionSql.Close();
+            }
+            return producto;
         }
     }
 }

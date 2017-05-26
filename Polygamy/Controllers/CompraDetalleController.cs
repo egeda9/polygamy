@@ -45,8 +45,10 @@ namespace Polygamy.Controllers
         {
             try
             {
+                int idProducto = Convert.ToInt32(collection["producto"].ToString());
+
                 Compra compra = _compraGateway.obtener(Convert.ToInt32(TempData["idCompra"]));
-                Producto producto = _productoGateway.obtener(Convert.ToInt32(collection["producto"]));
+                Producto producto = _productoGateway.obtener(idProducto);
 
                 CompraDetalle compraDetalle = new CompraDetalle
                 {
@@ -57,7 +59,7 @@ namespace Polygamy.Controllers
 
                 _compraDetalleGateway.crear(compraDetalle);
 
-                return View();
+                return RedirectToAction("Registrar", new { idBeneficiario = compra.beneficiario.idBeneficiario });
             }
 
             catch (Exception ex)

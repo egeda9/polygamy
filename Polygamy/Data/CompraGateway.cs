@@ -79,6 +79,7 @@ namespace Polygamy.Data
                                   " ,c.idBeneficiario" +
                                   " ,c.fecha" +
                                   " FROM Compra c" +
+                                  " INNER JOIN Beneficiario b ON b.idBeneficiario = c.idBeneficiario" +
                                   " WHERE c.id = @Id";
 
                 List<Compra> compras = conexionSql.Query<Compra>(consulta, new { Id = id }).ToList();
