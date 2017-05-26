@@ -20,9 +20,31 @@ namespace Polygamy.Data
 
         /// 
         /// <param name="compra"></param>
-        public Compra actualizar(Compra compra)
+        public bool actualizar(Compra compra)
         {
-            return new Compra();
+            int resultado = 0;
+            try
+            {
+                using (IDbConnection conexionSql = new SqlConnection(_databaseSettings.Value.defaultConnection))
+                {
+                    conexionSql.Open();
+
+                    string actualizarCompra = "UPDATE Compra SET total = @Total WHERE id = @Id";
+
+                    using (IDbTransaction transaccion = conexionSql.BeginTransaction())
+                    {
+                        resultado = conexionSql.Execute(actualizarCompra, compra, transaccion);
+                        transaccion.Commit();
+                    }
+                    conexionSql.Close();
+                }
+            }
+
+            catch (Exception ex)
+            {
+
+            }
+            return resultado > 0;
         }
 
         /// 
@@ -36,12 +58,12 @@ namespace Polygamy.Data
                 {
                     conexionSql.Open();
 
-                    string insertarCompra = "INSERT INTO Compra(idSupermercado, idBeneficiario, fecha) VALUES (@IdSupermercado, @IdBeneficiario, @Fecha); " +
+                    string insertarCompra = "INSERT INTO Compra(idSupermercado, idBeneficiario, fecha, total) VALUES (@IdSupermercado, @IdBeneficiario, @Fecha, @Total); " +
                                             "SELECT CAST(SCOPE_IDENTITY() as int)";
 
                     using (IDbTransaction transaccion = conexionSql.BeginTransaction())
                     {
-                        compraId = conexionSql.Query<int>(insertarCompra, new { IdSupermercado = compra.supermercado.id, IdBeneficiario = compra.beneficiario.idBeneficiario, Fecha = compra.fecha }, transaccion).Single();                        
+                        compraId = conexionSql.Query<int>(insertarCompra, new { IdSupermercado = compra.supermercado.id, IdBeneficiario = compra.beneficiario.idBeneficiario, Fecha = compra.fecha, Total = 0 }, transaccion).Single();                        
                         transaccion.Commit();
                     }
                     conexionSql.Close();
@@ -76,13 +98,23 @@ namespace Polygamy.Data
                 conexionSql.Open();
                 string consulta = "SELECT c.id" +
                                   " ,c.idSupermercado" +
-                                  " ,c.idBeneficiario" +
                                   " ,c.fecha" +
+                                  " ,c.total" +
+                                  " ,b.id AS idBeneficiario" +
+                                  " ,b.idAfiliado" + 
+                                  " ,b.cupo" +
+                                  " ,b.fechaCompraInicio" +
+                                  " ,b.fechaCompraFin" +
+                                  " ,b.idPersona" +
+                                  " ,b.activo" +
+                                  " ,a.id AS idAfiliado" +
+                                  " ,a.cupo" +                                  
                                   " FROM Compra c" +
-                                  " INNER JOIN Beneficiario b ON b.idBeneficiario = c.idBeneficiario" +
+                                  " INNER JOIN Beneficiario b ON b.id = c.idBeneficiario" +
+                                  " INNER JOIN Afiliado a ON a.id = b.idAfiliado" +
                                   " WHERE c.id = @Id";
 
-                List<Compra> compras = conexionSql.Query<Compra>(consulta, new { Id = id }).ToList();
+                List<Compra> compras = conexionSql.Query<Compra, Beneficiario, Afiliado, Compra>(consulta, (c, b, a) => { c.beneficiario = b; c.beneficiario.afiliado = a; return c; }, new { Id = id }, splitOn: "idBeneficiario, idAfiliado" ).ToList();
                 compra = compras.FirstOrDefault();
                 conexionSql.Close();
             }

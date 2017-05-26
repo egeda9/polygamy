@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Dapper.Mapper;
 using Microsoft.Extensions.Options;
 using Polygamy.Models;
 using System;
@@ -64,7 +65,23 @@ namespace Polygamy.Data
         /// <param name="compraId"></param>
         public List<CompraDetalle> listar(int compraId)
         {
-            return null;
+            List<CompraDetalle> comprasDetalle = new List<CompraDetalle>();
+            using (IDbConnection conexionSql = new SqlConnection(_databaseSettings.Value.defaultConnection))
+            {
+                conexionSql.Open();
+                string consulta = "SELECT c.id" +
+                                  " ,c.cantidad" +
+                                  " ,p.id" +
+                                  " ,p.descripcion" +
+                                  " ,p.precioUnitario" +                                  
+                                  " FROM Compradetalle c" +
+                                  " INNER JOIN Producto p ON p.id = c.idProducto" +
+                                  " WHERE c.idCompra = @IdCompra";
+
+                comprasDetalle = conexionSql.Query<CompraDetalle, Producto>(consulta, new { IdCompra = compraId } ).ToList();
+                conexionSql.Close();
+            }
+            return comprasDetalle;
         }
 
         /// 

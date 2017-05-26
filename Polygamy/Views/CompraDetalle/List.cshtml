@@ -1,0 +1,44 @@
+@model List<CompraDetalle>
+
+@{
+    ViewData["Title"] = "Productos en la Compra";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Productos en la Compra</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Producto
+            </th>
+            <th>
+                Cantidad
+            </th>
+            <th>
+                Precio Unitario (COP)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.producto.descripcion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.cantidad)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.producto.precioUnitario)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div>
+    <a asp-action="Create" asp-route-idCompra="@TempData["idCompra"]">Retornar a Agregar</a>
+</div>

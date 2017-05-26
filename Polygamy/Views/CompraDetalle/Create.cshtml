@@ -1,7 +1,7 @@
 @model CompraDetalle
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Crear";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -26,11 +26,15 @@
         </div>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Guardar" class="btn btn-default" />
+                <input type="submit" value="Agregar" class="btn btn-default" />
             </div>
         </div>
     </div>
 </form>
+
+<div>
+    <a asp-controller="Compra" asp-action="Validar">Retornar validar prerrequisitos de compra</a>
+</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

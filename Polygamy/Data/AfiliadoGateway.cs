@@ -22,7 +22,29 @@ namespace Polygamy.Data
         /// <param name="afiliado"></param>
         public bool actualizar(Afiliado afiliado)
         {
-            return true;
+            int resultado = 0;
+            try
+            {
+                using (IDbConnection conexionSql = new SqlConnection(_databaseSettings.Value.defaultConnection))
+                {
+                    conexionSql.Open();
+
+                    string actualizarCompra = "UPDATE Afiliado SET cupo = @Cupo WHERE id = @idAfiliado";
+
+                    using (IDbTransaction transaccion = conexionSql.BeginTransaction())
+                    {
+                        resultado = conexionSql.Execute(actualizarCompra, afiliado, transaccion);
+                        transaccion.Commit();
+                    }
+                    conexionSql.Close();
+                }
+            }
+
+            catch (Exception ex)
+            {
+
+            }
+            return resultado > 0;
         }
 
         /// 
