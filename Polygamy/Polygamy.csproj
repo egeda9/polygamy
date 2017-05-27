@@ -44,6 +44,7 @@
     <Folder Include="Sql\" />
     <Folder Include="Views\Beneficiario\" />
     <Folder Include="Views\CompraDetalle\" />
+    <Folder Include="Views\Reporte\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Polygamy.Security\Polygamy.Security.csproj" />

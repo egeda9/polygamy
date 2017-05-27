@@ -39,6 +39,8 @@
     </tbody>
 </table>
 
-<div>
-    <a asp-action="Create" asp-route-idCompra="@TempData["idCompra"]">Retornar a Agregar</a>
+<div class="form-inline">
+    <p><b>Total:</b> @Model.Sum(x => (x.cantidad * x.producto.precioUnitario)) (COP)</p>
+    <hr />
+    <a asp-action="Create" asp-route-idCompra="@TempData["idCompra"]">Retornar a Agregar Producto</a>
 </div>

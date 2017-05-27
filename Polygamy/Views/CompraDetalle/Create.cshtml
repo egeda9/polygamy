@@ -5,7 +5,10 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Compra Detalle</h2>
+<div class="form-inline">
+    <h2>Compra Detalle</h2>
+    <h3>Compra #: @TempData["idCompra"]</h3>
+</div>
 
 <form asp-action="Create">
     <div class="form-horizontal">
@@ -25,6 +28,9 @@
             </div>
         </div>
         <div class="form-group">
+            <input asp-for="compra" value="@TempData["idCompra"]" class="form-control" type="hidden" />
+        </div>
+        <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Agregar" class="btn btn-default" />
             </div>
@@ -32,8 +38,9 @@
     </div>
 </form>
 
-<div>
-    <a asp-controller="Compra" asp-action="Validar">Retornar validar prerrequisitos de compra</a>
+<div class="form-inline">
+    <a asp-controller="Compra" asp-action="Validar">Retornar validar prerrequisitos de compra</a> |
+    <a asp-controller="CompraDetalle" asp-action="List" asp-route-idCompra="@TempData["idCompra"]">Ver productos de la compra</a>
 </div>
 
 @section Scripts {

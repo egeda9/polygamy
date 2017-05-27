@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
 using Polygamy.Data;
+using Polygamy.Enum;
 using Polygamy.Models;
 using System;
 using System.Collections.Generic;
@@ -28,7 +29,7 @@ namespace Polygamy.Controllers
         }
 
         // GET: CompraDetalle/Create
-        public ActionResult Create(int idCompra)
+        public ActionResult Create(int idCompra, int tipoMensaje = 0)
         {
             var productos = _productoGateway.listar().Select(p => new
             {
@@ -36,10 +37,17 @@ namespace Polygamy.Controllers
                 NombreCompleto = string.Format("{0} - {1} (COP)", p.descripcion, p.precioUnitario)
             })
             .ToList();
+            
+            ViewBag.Productos = new SelectList(productos, "Id", "NombreCompleto");
+            if (tipoMensaje > 0)
+            {
+                string mensaje = tipoMensaje == 1 ? "Cupo insuficiente para beneficiario" : "Cupo insuficiente para afiliado";
+                ViewBag.Messages = new[] {
+                        new AlertViewModel("warning", "Aviso", mensaje)
+                    };                
+            }
 
             TempData["idCompra"] = idCompra;
-            ViewBag.Productos = new SelectList(productos, "Id", "NombreCompleto");
-
             return View();
         }
 
@@ -52,7 +60,7 @@ namespace Polygamy.Controllers
             {
                 int idProducto = Convert.ToInt32(collection["producto"].ToString());
 
-                Compra compra = _compraGateway.obtener(Convert.ToInt32(TempData["idCompra"]));
+                Compra compra = _compraGateway.obtener(Convert.ToInt32(collection["compra"]));
                 Producto producto = _productoGateway.obtener(idProducto);
 
                 CompraDetalle compraDetalle = new CompraDetalle
@@ -65,42 +73,10 @@ namespace Polygamy.Controllers
                 float totalCompra = (compraDetalle.cantidad * compraDetalle.producto.precioUnitario) + compra.total;
 
                 if (compra.beneficiario.cupo < totalCompra)
-                {
-                    ViewBag.Messages = new[] {
-                        new AlertViewModel("warning", "Aviso", "Cupo insuficiente para beneficiario")
-                    };
-
-                    var productos = _productoGateway.listar().Select(p => new
-                    {
-                        Id = p.id,
-                        NombreCompleto = string.Format("{0} - {1} (COP)", p.descripcion, p.precioUnitario)
-                                })
-                        .ToList();
-
-                    TempData["idCompra"] = compra.id;
-                    ViewBag.Productos = new SelectList(productos, "Id", "NombreCompleto");
-
-                    return View();
-                }
+                    return RedirectToAction("Create", new { idCompra = compra.id, tipoMensaje = (int)CompraMensajeEnum.CupoBeneficiario });
 
                 else if (compra.beneficiario.afiliado.cupo < totalCompra)
-                {
-                    ViewBag.Messages = new[] {
-                        new AlertViewModel("warning", "Aviso", "Cupo insuficiente para afiliado")
-                    };
-
-                    var productos = _productoGateway.listar().Select(p => new
-                    {
-                        Id = p.id,
-                        NombreCompleto = string.Format("{0} - {1} (COP)", p.descripcion, p.precioUnitario)
-                    })
-                        .ToList();
-
-                    TempData["idCompra"] = compra.id;
-                    ViewBag.Productos = new SelectList(productos, "Id", "NombreCompleto");
-
-                    return View();
-                }
+                    return RedirectToAction("Create", new { idCompra = compra.id, mensaje = (int)CompraMensajeEnum.CupoAfiliado });
 
                 else
                 {
