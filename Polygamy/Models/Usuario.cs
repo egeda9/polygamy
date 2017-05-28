@@ -10,6 +10,8 @@ namespace Polygamy.Models
 
         }
 
+        public int idUsuario { get; set; }
+
         [Display(Name = "Contraseña")]
         [Required(ErrorMessage = "La contraseña es obligatoria")]
         public string contrasena { get; set; }

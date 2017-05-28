@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using Dapper.Mapper;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Polygamy.Models;
 using System;
@@ -13,17 +14,19 @@ namespace Polygamy.Data
     public class CompraDetalleGateway
     {
         private readonly IOptions<AppSettings> _databaseSettings;
+        private readonly ILogger _logger;
 
-        public CompraDetalleGateway(IOptions<AppSettings> databaseSettings)
+        public CompraDetalleGateway(IOptions<AppSettings> databaseSettings, ILoggerFactory loggerFactory)
         {
             _databaseSettings = databaseSettings;
+            _logger = loggerFactory.CreateLogger<CompraDetalleGateway>();
         }
 
         /// 
         /// <param name="compraDetalle"></param>
-        public int crear(CompraDetalle compraDetalle)
+        public bool crear(CompraDetalle compraDetalle)
         {
-            int compraDetalleId = 0;
+            bool resultadoProceso = false;
             try
             {
                 using (IDbConnection conexionSql = new SqlConnection(_databaseSettings.Value.defaultConnection))
@@ -35,18 +38,20 @@ namespace Polygamy.Data
 
                     using (IDbTransaction transaccion = conexionSql.BeginTransaction())
                     {
-                        compraDetalleId = conexionSql.Query<int>(insertarCompra, new { IdProducto = compraDetalle.producto.id, Cantidad = compraDetalle.cantidad, IdCompra = compraDetalle.compra.id }, transaccion).Single();
+                        int compraDetalleId = conexionSql.Query<int>(insertarCompra, new { IdProducto = compraDetalle.producto.id, Cantidad = compraDetalle.cantidad, IdCompra = compraDetalle.compra.id }, transaccion).Single();
                         transaccion.Commit();
                     }
                     conexionSql.Close();
+                    resultadoProceso = true;
                 }
             }
 
             catch (Exception ex)
             {
-
+                _logger.LogError(ex.Message, ex);
+                resultadoProceso = false;
             }
-            return compraDetalleId;
+            return resultadoProceso;
         }
 
         /// 

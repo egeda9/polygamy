@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Polygamy.Models;
 using System;
@@ -12,24 +13,26 @@ namespace Polygamy.Data
     public class BeneficiarioGateway
     {
         private readonly IOptions<AppSettings> _databaseSettings;
+        private readonly ILogger _logger;
 
-        public BeneficiarioGateway(IOptions<AppSettings> databaseSettings)
+        public BeneficiarioGateway(IOptions<AppSettings> databaseSettings, ILoggerFactory loggerFactory)
         {
             _databaseSettings = databaseSettings;
+            _logger = loggerFactory.CreateLogger<BeneficiarioGateway>();
         }
 
         /// 
         /// <param name="beneficiario"></param>
-        public Beneficiario actualizar(Beneficiario beneficiario)
+        public bool actualizar(Beneficiario beneficiario)
         {
-            return new Beneficiario();
+            return true;
         }
 
         /// 
         /// <param name="beneficiario"></param>
-        public int crear(Beneficiario beneficiario)
+        public bool crear(Beneficiario beneficiario)
         {
-            int personaId = 0;
+            bool resultadoProceso = false;
             try
             {
                 using (IDbConnection conexionSql = new SqlConnection(_databaseSettings.Value.defaultConnection))
@@ -42,19 +45,21 @@ namespace Polygamy.Data
 
                     using (IDbTransaction transaccion = conexionSql.BeginTransaction())
                     {
-                        personaId = conexionSql.Query<int>(insertarPersona, new { Identificacion = beneficiario.identificacion, Nombres = beneficiario.nombres, Apellidos = beneficiario.apellidos, NumeroTelefono = beneficiario.numeroTelefono, Email = beneficiario.email, DireccionResidencia = beneficiario.direccionResidencia, CiudadResidencia = beneficiario.ciudadResidencia }, transaccion).Single();
+                        int personaId = conexionSql.Query<int>(insertarPersona, new { Identificacion = beneficiario.identificacion, Nombres = beneficiario.nombres, Apellidos = beneficiario.apellidos, NumeroTelefono = beneficiario.numeroTelefono, Email = beneficiario.email, DireccionResidencia = beneficiario.direccionResidencia, CiudadResidencia = beneficiario.ciudadResidencia }, transaccion).Single();
                         conexionSql.Execute(insertarAfiliado, new { Cupo = beneficiario.cupo, FechaCompraInicio = beneficiario.fechaCompraInicio, FechaCompraFin = beneficiario.fechaCompraFin, IdAfiliado = beneficiario.afiliado.idAfiliado, IdPersona = personaId, Activo = beneficiario.activo }, transaccion);
                         transaccion.Commit();
                     }
                     conexionSql.Close();
+                    resultadoProceso = true;
                 }
             }
 
             catch(Exception ex)
             {
-                
+                _logger.LogError(ex.Message, ex);
+                resultadoProceso = false;
             }
-            return personaId;
+            return resultadoProceso;
         }
 
         /// 

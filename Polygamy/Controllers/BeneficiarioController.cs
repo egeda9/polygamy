@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Polygamy.Data;
 using Polygamy.Models;
@@ -15,11 +16,13 @@ namespace Polygamy.Controllers
     {
         private BeneficiarioGateway _beneficiarioGateway;
         private AfiliadoGateway _afiliadoGateway;
+        private readonly ILogger _logger;
 
-        public BeneficiarioController(IOptions<AppSettings> databaseSettings)
+        public BeneficiarioController(IOptions<AppSettings> databaseSettings, ILoggerFactory loggerFactory)
         {
-            _beneficiarioGateway = new BeneficiarioGateway(databaseSettings);
-            _afiliadoGateway = new AfiliadoGateway(databaseSettings);
+            _beneficiarioGateway = new BeneficiarioGateway(databaseSettings, loggerFactory);
+            _afiliadoGateway = new AfiliadoGateway(databaseSettings, loggerFactory);
+            _logger = loggerFactory.CreateLogger<BeneficiarioController>();
         }
 
         // GET: Beneficiarios
@@ -50,7 +53,6 @@ namespace Polygamy.Controllers
             try
             {
                 Afiliado afiliado =_afiliadoGateway.obtener(Convert.ToInt32(collection["afiliado"]));
-
                 Beneficiario beneficiario = new Beneficiario
                 {
                     activo = Convert.ToBoolean(collection["activo"].ToString().Split(',')[0]),
@@ -68,11 +70,12 @@ namespace Polygamy.Controllers
                     afiliado = afiliado
                 };
 
-                int personaId = _beneficiarioGateway.crear(beneficiario);
+                _beneficiarioGateway.crear(beneficiario);
                 return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message, ex);
                 return View();
             }
         }

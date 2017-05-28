@@ -1,6 +1,6 @@
 ﻿namespace Polygamy.Enum
 {
-    public enum CompraMensajeEnum
+    public enum MensajeEnum
     {
         CupoBeneficiario = 1,
         CupoAfiliado = 2

@@ -7,6 +7,7 @@
 
         }
 
+        public int idCajero { get; set; }
         public int numeroCaja { get; set; }
         public Supermercado supermercado { get; set; }
     }

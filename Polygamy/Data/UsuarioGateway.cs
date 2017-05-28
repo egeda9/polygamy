@@ -19,23 +19,23 @@ namespace Polygamy.Data
 
         /// 
         /// <param name="usuario"></param>
-        public void actualizar(Usuario usuario)
+        public bool actualizar(Usuario usuario)
         {
-
+            return true;
         }
 
         /// 
         /// <param name="usuario"></param>
-        public void crear(Usuario usuario)
+        public bool crear(Usuario usuario)
         {
-
+            return true;
         }
 
         /// 
         /// <param name="id"></param>
-        public void eliminar(int id)
+        public bool eliminar(int id)
         {
-
+            return true;
         }
 
         /// 

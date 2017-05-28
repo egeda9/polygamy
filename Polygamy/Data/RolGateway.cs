@@ -10,19 +10,8 @@ namespace Polygamy.Data
 
         }
 
-        ~RolGateway()
-        {
-
-        }
-
-        public virtual void Dispose()
-        {
-
-        }
-
         public List<Rol> listar()
         {
-
             return null;
         }
 

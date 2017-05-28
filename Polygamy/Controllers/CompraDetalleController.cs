@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Polygamy.Data;
 using Polygamy.Enum;
@@ -18,14 +19,16 @@ namespace Polygamy.Controllers
         private readonly CompraDetalleGateway _compraDetalleGateway;
         private readonly BeneficiarioGateway _beneficiarioGateway;
         private readonly AfiliadoGateway _afiliadoGateway;
+        private readonly ILogger _logger;
 
-        public CompraDetalleController(IOptions<AppSettings> databaseSettings)
+        public CompraDetalleController(IOptions<AppSettings> databaseSettings, ILoggerFactory loggerFactory)
         {
             _productoGateway = new ProductoGateway(databaseSettings);
-            _compraGateway = new CompraGateway(databaseSettings);
-            _compraDetalleGateway = new CompraDetalleGateway(databaseSettings);
-            _beneficiarioGateway = new BeneficiarioGateway(databaseSettings);
-            _afiliadoGateway = new AfiliadoGateway(databaseSettings);
+            _compraGateway = new CompraGateway(databaseSettings, loggerFactory);
+            _compraDetalleGateway = new CompraDetalleGateway(databaseSettings, loggerFactory);
+            _beneficiarioGateway = new BeneficiarioGateway(databaseSettings, loggerFactory);
+            _afiliadoGateway = new AfiliadoGateway(databaseSettings, loggerFactory);
+            _logger = loggerFactory.CreateLogger<CompraDetalleController>();
         }
 
         // GET: CompraDetalle/Create
@@ -73,10 +76,10 @@ namespace Polygamy.Controllers
                 float totalCompra = (compraDetalle.cantidad * compraDetalle.producto.precioUnitario) + compra.total;
 
                 if (compra.beneficiario.cupo < totalCompra)
-                    return RedirectToAction("Create", new { idCompra = compra.id, tipoMensaje = (int)CompraMensajeEnum.CupoBeneficiario });
+                    return RedirectToAction("Create", new { idCompra = compra.id, tipoMensaje = (int)MensajeEnum.CupoBeneficiario });
 
                 else if (compra.beneficiario.afiliado.cupo < totalCompra)
-                    return RedirectToAction("Create", new { idCompra = compra.id, mensaje = (int)CompraMensajeEnum.CupoAfiliado });
+                    return RedirectToAction("Create", new { idCompra = compra.id, tipoMensaje = (int)MensajeEnum.CupoAfiliado });
 
                 else
                 {
@@ -98,6 +101,8 @@ namespace Polygamy.Controllers
                 ViewBag.Messages = new[] {
                     new AlertViewModel("danger", "Error en el proceso", ex.Message)
                 };
+
+                _logger.LogError(ex.Message, ex);
                 return View();
             }
         }

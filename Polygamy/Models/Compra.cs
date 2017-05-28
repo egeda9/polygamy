@@ -28,14 +28,6 @@ namespace Polygamy.Models
         }
 
         /// 
-        /// <param name="fechaFin"></param>
-        /// <param name="fechaInicio"></param>
-        public List<Compra> obtenerReporte(DateTime fechaFin, DateTime fechaInicio)
-        {
-            return null;
-        }
-
-        /// 
         /// <param name="compraDetalle"></param>
         public List<CompraDetalle> removerCompraDetalle(CompraDetalle compraDetalle)
         {

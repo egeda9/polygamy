@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Polygamy.Data;
 using Polygamy.Models;
@@ -13,13 +14,15 @@ namespace Polygamy.Controllers
     {
         private readonly BeneficiarioGateway _beneficiarioGateway;
         private readonly SupermercadoGateway _supermercadoGateway;
-        private readonly CompraGateway _compraGateway;        
+        private readonly CompraGateway _compraGateway;
+        private readonly ILogger _logger;
 
-        public CompraController(IOptions<AppSettings> databaseSettings)
+        public CompraController(IOptions<AppSettings> databaseSettings, ILoggerFactory loggerFactory)
         {
-            _beneficiarioGateway = new BeneficiarioGateway(databaseSettings);
+            _beneficiarioGateway = new BeneficiarioGateway(databaseSettings, loggerFactory);
             _supermercadoGateway = new SupermercadoGateway(databaseSettings);
-            _compraGateway = new CompraGateway(databaseSettings);            
+            _compraGateway = new CompraGateway(databaseSettings, loggerFactory);
+            _logger = loggerFactory.CreateLogger<CompraController>();
         }
 
         // GET: Compra
@@ -69,6 +72,8 @@ namespace Polygamy.Controllers
                 ViewBag.Messages = new[] {
                     new AlertViewModel("danger", "Error en el proceso: ", ex.Message)
                 };
+
+                _logger.LogError(ex.Message, ex);
                 return View();
             }
         }
@@ -111,6 +116,7 @@ namespace Polygamy.Controllers
 
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message, ex);
                 return View();
             }
         }        

@@ -1,4 +1,6 @@
 ﻿using Dapper;
+using Dapper.Mapper;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Polygamy.Models;
 using System;
@@ -12,10 +14,12 @@ namespace Polygamy.Data
     public class CompraGateway
     {
         private readonly IOptions<AppSettings> _databaseSettings;
+        private readonly ILogger _logger;
 
-        public CompraGateway(IOptions<AppSettings> databaseSettings)
+        public CompraGateway(IOptions<AppSettings> databaseSettings, ILoggerFactory loggerFactory)
         {
             _databaseSettings = databaseSettings;
+            _logger = loggerFactory.CreateLogger<CompraGateway>();
         }
 
         /// 
@@ -42,7 +46,7 @@ namespace Polygamy.Data
 
             catch (Exception ex)
             {
-
+                _logger.LogError(ex.Message, ex);
             }
             return resultado > 0;
         }
@@ -72,7 +76,7 @@ namespace Polygamy.Data
 
             catch (Exception ex)
             {
-
+                _logger.LogError(ex.Message, ex);
             }
             return compraId;
         }
@@ -85,9 +89,32 @@ namespace Polygamy.Data
         /// 
         /// <param name="fechaFin"></param>
         /// <param name="fechaInicio"></param>
-        public List<Compra> obtener(DateTime fechaFin, DateTime fechaInicio)
+        public List<Compra> obtener(DateTime fechaInicio, DateTime fechaFin)
         {
-            return null;
+            List<Compra> compras = new List<Compra>();
+            using (IDbConnection conexionSql = new SqlConnection(_databaseSettings.Value.defaultConnection))
+            {
+                conexionSql.Open();
+                string consulta = "SELECT TOP 20 c.id" +
+                                " ,c.fecha" +
+                                " ,c.total" +
+                                " ,s.id" +
+                                " ,s.ciudad" +
+                                " ,s.direccion" +
+                                " ,p.id" +
+                                " ,p.nombres" +
+                                " ,p.apellidos" +
+                                " FROM Compra c" +
+                                " INNER JOIN Supermercado s ON s.id = c.idSupermercado" +
+                                " INNER JOIN Beneficiario b ON b.id = c.idBeneficiario" +
+                                " INNER JOIN Persona p ON p.id = b.idPersona" +
+                                " WHERE c.fecha BETWEEN @FechaInicio AND @FechaFin" +
+                                " ORDER BY c.total";
+
+                compras = conexionSql.Query<Compra, Supermercado, Beneficiario, Compra>(consulta, (c, s, b) => { c.supermercado = s; c.beneficiario = b; return c; }, new { FechaInicio = fechaInicio, FechaFin = fechaFin } ).ToList();
+                conexionSql.Close();
+            }
+            return compras;
         }
 
         public Compra obtener(int id)

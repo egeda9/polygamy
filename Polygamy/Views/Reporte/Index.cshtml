@@ -1,4 +1,3 @@
-
 @{
     ViewData["Title"] = "Reporte";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -6,27 +5,25 @@
 
 <h2>Reporte de m&aacute;ximos valores de compra</h2>
 
-<form asp-action="Create">
-    <div class="form-horizontal">
-        <hr />
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>        
-        <div class="form-group">
-            <label class="col-md-2 control-label">Fecha Inicio</label>
-            <div class="col-md-10">
-                <input type="datetime" class="form-control" />
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-md-2 control-label">Fecha Fin</label>
-            <div class="col-md-10">
-                <input type="datetime" class="form-control" />
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Crear" class="btn btn-default" />
-            </div>
+<div class="form-horizontal">
+    <hr />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>        
+    <div class="form-group">
+        <label class="col-md-2 control-label">Fecha Inicio</label>
+        <div class="col-md-10">
+            <input type="text" id="fechaInicio" class="form-control" placeholder="Seleccione fecha inicial del reporte" />
         </div>
     </div>
-</form>
+    <div class="form-group">
+        <label class="col-md-2 control-label">Fecha Fin</label>
+        <div class="col-md-10">
+            <input type="text" id="fechaFin" class="form-control" placeholder="Seleccione fecha final del reporte" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="button" onclick="crearReporte()" value="Exportar reporte" class="btn btn-default" />
+        </div>
+    </div>
+</div>
 

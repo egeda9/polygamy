@@ -10,35 +10,25 @@ namespace Polygamy.Data
 
         }
 
-        ~Administrador_SupermercadoGateway()
+        /// 
+        /// <param name="administradorSupermercado"></param>
+        public bool actualizar(Administrador_Supermercado administradorSupermercado)
         {
-
-        }
-
-        public virtual void Dispose()
-        {
-
+            return true;
         }
 
         /// 
         /// <param name="administradorSupermercado"></param>
-        public void actualizar(Administrador_Supermercado administradorSupermercado)
+        public bool crear(Administrador_Supermercado administradorSupermercado)
         {
-
-        }
-
-        /// 
-        /// <param name="administradorSupermercado"></param>
-        public void crear(Administrador_Supermercado administradorSupermercado)
-        {
-
+            return true;
         }
 
         /// 
         /// <param name="id"></param>
-        public void eliminar(int id)
+        public bool eliminar(int id)
         {
-
+            return true;
         }
 
         public List<Administrador_Supermercado> listar()

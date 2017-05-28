@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Polygamy.Models;
 using System;
@@ -12,10 +13,12 @@ namespace Polygamy.Data
     public class AfiliadoGateway
     {
         private readonly IOptions<AppSettings> _databaseSettings;
-        
-        public AfiliadoGateway(IOptions<AppSettings> databaseSettings)
+        private readonly ILogger _logger;
+
+        public AfiliadoGateway(IOptions<AppSettings> databaseSettings, ILoggerFactory loggerFactory)
         {
             _databaseSettings = databaseSettings;
+            _logger = loggerFactory.CreateLogger<AfiliadoGateway>();
         }
 
         /// 
@@ -42,7 +45,7 @@ namespace Polygamy.Data
 
             catch (Exception ex)
             {
-
+                _logger.LogError(ex.Message, ex);
             }
             return resultado > 0;
         }
@@ -69,13 +72,13 @@ namespace Polygamy.Data
                         transaccion.Commit();
                     }
                     conexionSql.Close();
-
                     resultadoProceso = true;
                 }
             }
 
             catch(Exception ex)
             {
+                _logger.LogError(ex.Message, ex);
                 resultadoProceso = false;
             }
             return resultadoProceso;

@@ -10,16 +10,6 @@ namespace Polygamy.Data
 
         }
 
-        ~PermisoGateway()
-        {
-
-        }
-
-        public virtual void Dispose()
-        {
-
-        }
-
         public List<Permiso> listar()
         {
             return null;

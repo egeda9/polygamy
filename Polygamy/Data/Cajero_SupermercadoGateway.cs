@@ -10,35 +10,25 @@ namespace Polygamy.Data
 
         }
 
-        ~Cajero_SupermercadoGateway()
+        /// 
+        /// <param name="cajeroSupermercado"></param>
+        public bool actualizar(Cajero_Supermercado cajeroSupermercado)
         {
-
-        }
-
-        public virtual void Dispose()
-        {
-
+            return true;
         }
 
         /// 
         /// <param name="cajeroSupermercado"></param>
-        public void actualizar(Cajero_Supermercado cajeroSupermercado)
+        public bool crear(Cajero_Supermercado cajeroSupermercado)
         {
-
-        }
-
-        /// 
-        /// <param name="cajeroSupermercado"></param>
-        public void crear(Cajero_Supermercado cajeroSupermercado)
-        {
-
+            return true;
         }
 
         /// 
         /// <param name="id"></param>
-        public void eliminar(int id)
+        public bool eliminar(int id)
         {
-
+            return true;
         }
 
         public List<Cajero_Supermercado> listar()
