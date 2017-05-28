@@ -10,6 +10,6 @@
         public string ciudad { get; set; }
         public int id { get; set; }
         public string direccion { get; set; }
-        public int idRedSupermercado { get; set; }
+        public Red_Supermercado redSupermercado { get; set; }
     }
 }
