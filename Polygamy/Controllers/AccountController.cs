@@ -13,25 +13,17 @@ namespace Polygamy.Controllers
 {    
     public class AccountController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger _logger;
-        private readonly string _externalCookieScheme;
         private UsuarioGateway _usuarioGateway;
         private Encripcion _encriptar;
 
         const string SessionKeyName = "_NombreUsuario";
 
         public AccountController(
-            UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager,
             IOptions<IdentityCookieOptions> identityCookieOptions,
             ILoggerFactory loggerFactory,
             IOptions<AppSettings> databaseSettings)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _externalCookieScheme = identityCookieOptions.Value.ExternalCookieAuthenticationScheme;
             _logger = loggerFactory.CreateLogger<AccountController>();
 
             _usuarioGateway = new UsuarioGateway(databaseSettings);
@@ -44,9 +36,6 @@ namespace Polygamy.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login(string returnUrl = null)
         {
-            // Clear the existing external cookie to ensure a clean login process
-            await HttpContext.Authentication.SignOutAsync(_externalCookieScheme);
-
             ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
@@ -109,19 +98,6 @@ namespace Polygamy.Controllers
             if (ModelState.IsValid)
             {
                 _usuarioGateway.crear(usuario);
-                //if (result.Succeeded)
-                //{
-                //    // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=532713
-                //    // Send an email with this link
-                //    //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                //    //var callbackUrl = Url.Action(nameof(ConfirmEmail), "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
-                //    //await _emailSender.SendEmailAsync(model.Email, "Confirm your account",
-                //    //    $"Please confirm your account by clicking this link: <a href='{callbackUrl}'>link</a>");
-                //    await _signInManager.SignInAsync(user, isPersistent: false);
-                //    _logger.LogInformation(3, "User created a new account with password.");
-                //    return RedirectToLocal(returnUrl);
-                //}
-                //AddErrors(result);
             }
 
             // If we got this far, something failed, redisplay form
