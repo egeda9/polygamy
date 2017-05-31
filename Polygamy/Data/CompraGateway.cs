@@ -109,7 +109,7 @@ namespace Polygamy.Data
                                 " INNER JOIN Beneficiario b ON b.id = c.idBeneficiario" +
                                 " INNER JOIN Persona p ON p.id = b.idPersona" +
                                 " WHERE c.fecha BETWEEN @FechaInicio AND @FechaFin" +
-                                " ORDER BY c.total";
+                                " ORDER BY c.total DESC";
 
                 compras = conexionSql.Query<Compra, Supermercado, Beneficiario, Compra>(consulta, (c, s, b) => { c.supermercado = s; c.beneficiario = b; return c; }, new { FechaInicio = fechaInicio, FechaFin = fechaFin } ).ToList();
                 conexionSql.Close();
