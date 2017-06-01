@@ -14,8 +14,8 @@ namespace Polygamy.Controllers
     //[Authorize]
     public class BeneficiarioController : Controller
     {
-        private BeneficiarioGateway _beneficiarioGateway;
-        private AfiliadoGateway _afiliadoGateway;
+        private readonly BeneficiarioGateway _beneficiarioGateway;
+        private readonly AfiliadoGateway _afiliadoGateway;
         private readonly ILogger _logger;
 
         public BeneficiarioController(IOptions<AppSettings> databaseSettings, ILoggerFactory loggerFactory)

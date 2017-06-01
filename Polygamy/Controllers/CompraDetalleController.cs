@@ -17,7 +17,6 @@ namespace Polygamy.Controllers
         private readonly ProductoGateway _productoGateway;
         private readonly CompraGateway _compraGateway;
         private readonly CompraDetalleGateway _compraDetalleGateway;
-        private readonly BeneficiarioGateway _beneficiarioGateway;
         private readonly AfiliadoGateway _afiliadoGateway;
         private readonly ILogger _logger;
 
@@ -26,7 +25,6 @@ namespace Polygamy.Controllers
             _productoGateway = new ProductoGateway(databaseSettings);
             _compraGateway = new CompraGateway(databaseSettings, loggerFactory);
             _compraDetalleGateway = new CompraDetalleGateway(databaseSettings, loggerFactory);
-            _beneficiarioGateway = new BeneficiarioGateway(databaseSettings, loggerFactory);
             _afiliadoGateway = new AfiliadoGateway(databaseSettings, loggerFactory);
             _logger = loggerFactory.CreateLogger<CompraDetalleController>();
         }
@@ -78,20 +76,17 @@ namespace Polygamy.Controllers
                 if (compra.beneficiario.cupo < totalCompra)
                     return RedirectToAction("Create", new { idCompra = compra.id, tipoMensaje = (int)MensajeEnum.CupoBeneficiario });
 
-                else if (compra.beneficiario.afiliado.cupo < totalCompra)
+                if (compra.beneficiario.afiliado.cupo < totalCompra)
                     return RedirectToAction("Create", new { idCompra = compra.id, tipoMensaje = (int)MensajeEnum.CupoAfiliado });
 
-                else
-                {
-                    _compraDetalleGateway.crear(compraDetalle);
+                _compraDetalleGateway.crear(compraDetalle);
 
-                    float cupoAfiliado = compra.beneficiario.afiliado.cupo - (compraDetalle.cantidad * compraDetalle.producto.precioUnitario);
-                    compra.beneficiario.afiliado.cupo = cupoAfiliado;
-                    _afiliadoGateway.actualizar(compra.beneficiario.afiliado);
+                float cupoAfiliado = compra.beneficiario.afiliado.cupo - (compraDetalle.cantidad * compraDetalle.producto.precioUnitario);
+                compra.beneficiario.afiliado.cupo = cupoAfiliado;
+                _afiliadoGateway.actualizar(compra.beneficiario.afiliado);
 
-                    compra.total = totalCompra;
-                    _compraGateway.actualizar(compra);
-                }
+                compra.total = totalCompra;
+                _compraGateway.actualizar(compra);
 
                 return RedirectToAction("List", new { idCompra = compra.id });
             }

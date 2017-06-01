@@ -52,7 +52,7 @@ namespace Polygamy.Controllers
                     id = Convert.ToInt32(collection["id"]),
                 };
 
-                bool resultadoProceso = _afiliadoGateway.crear(afiliado);
+                _afiliadoGateway.crear(afiliado);
                 return RedirectToAction("Index");
             }
 

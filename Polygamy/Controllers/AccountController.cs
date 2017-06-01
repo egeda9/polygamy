@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -7,15 +6,14 @@ using Microsoft.Extensions.Options;
 using Polygamy.Models;
 using Polygamy.Data;
 using Polygamy.Security;
-using Microsoft.AspNetCore.Http;
 
 namespace Polygamy.Controllers
 {    
     public class AccountController : Controller
     {
         private readonly ILogger _logger;
-        private UsuarioGateway _usuarioGateway;
-        private Encripcion _encriptar;
+        private readonly UsuarioGateway _usuarioGateway;
+        private readonly Encripcion _encriptar;
 
         const string SessionKeyName = "_NombreUsuario";
 
@@ -68,13 +66,10 @@ namespace Polygamy.Controllers
                 return RedirectToLocal(returnUrl);
             }
 
-            else
-            {
-                ViewBag.Messages = new[] {
-                    new AlertViewModel("danger", "Error", "Usuario o contraseña inválidos")
-                };
-                return View(usuario);
-            }
+            ViewBag.Messages = new[] {
+                new AlertViewModel("danger", "Error", "Usuario o contraseña inválidos")
+            };
+            return View(usuario);
         }
 
         //

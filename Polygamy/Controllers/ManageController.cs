@@ -12,14 +12,12 @@ namespace Polygamy.Controllers
     public class ManageController : Controller
     {
         private readonly string _externalCookieScheme;
-        private readonly ILogger _logger;
 
         public ManageController(
           IOptions<IdentityCookieOptions> identityCookieOptions,
           ILoggerFactory loggerFactory)
         {
             _externalCookieScheme = identityCookieOptions.Value.ExternalCookieAuthenticationScheme;
-            _logger = loggerFactory.CreateLogger<ManageController>();
         }
 
         //

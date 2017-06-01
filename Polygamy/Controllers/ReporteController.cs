@@ -20,8 +20,7 @@ namespace Polygamy.Controllers
         private readonly ILogger _logger;
         private readonly IHostingEnvironment _hostingEnvironment;
 
-        private const string tituloArchivo = "Valores maximos de compra";
-        private const string autorArchivo = "IngSoft2017";
+        private const string AutorArchivo = "IngSoft2017";
 
         public ReporteController(IOptions<AppSettings> databaseSettings, ILoggerFactory loggerFactory, IHostingEnvironment hostingEnvironment)
         {
@@ -43,7 +42,7 @@ namespace Polygamy.Controllers
             try
             {
                 List<Compra> compras =_compraGateway.obtener(fechaInicio, fechaFin);
-                string mensaje = string.Empty;
+                string mensaje;
                 if (!compras.Any())
                 {
                     mensaje = "El reporte no contiene registros";
@@ -68,7 +67,6 @@ namespace Polygamy.Controllers
         {
             string webRootFolder = _hostingEnvironment.WebRootPath;
             string nombreArchivo = @"maximos-valores-compra.xlsx";
-            string url = string.Format("{0}://{1}/{2}", Request.Scheme, Request.Host, nombreArchivo);
             FileInfo archivo = new FileInfo(Path.Combine(webRootFolder, nombreArchivo));
 
             if (archivo.Exists)
@@ -103,8 +101,8 @@ namespace Polygamy.Controllers
                     range.Style.ShrinkToFit = false;
                 }
 
-                package.Workbook.Properties.Author = autorArchivo;
-                package.Workbook.Properties.Company = autorArchivo;
+                package.Workbook.Properties.Author = AutorArchivo;
+                package.Workbook.Properties.Company = AutorArchivo;
 
                 for (int i=0;i<compras.Count;i++)
                 {

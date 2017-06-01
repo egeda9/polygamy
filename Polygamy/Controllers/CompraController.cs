@@ -49,7 +49,7 @@ namespace Polygamy.Controllers
                     return View();
                 }
 
-                else if (!beneficiario.activo)
+                if (!beneficiario.activo)
                 {
                     ViewBag.Messages = new[] {
                         new AlertViewModel("warning", "Aviso", "Beneficiario inactivo")
@@ -57,7 +57,7 @@ namespace Polygamy.Controllers
                     return View();
                 }
 
-                else if (!BetweenDates(DateTime.Now.Date, beneficiario.fechaCompraInicio, beneficiario.fechaCompraFin))
+                if (!BetweenDates(DateTime.Now.Date, beneficiario.fechaCompraInicio, beneficiario.fechaCompraFin))
                 {
                     ViewBag.Messages = new[] {
                         new AlertViewModel("warning", "Aviso", "No puede registrarse la compra, fecha de compra no autorizada")
