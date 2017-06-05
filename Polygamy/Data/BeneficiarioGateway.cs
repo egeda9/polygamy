@@ -146,7 +146,7 @@ namespace Polygamy.Data
                                   " INNER JOIN Persona p1 ON p1.id = a.idPersona" +
                                   " WHERE p.identificacion = @Identificacion";
 
-                List<Beneficiario> beneficiarios = beneficiarios = conexionSql.Query<Beneficiario, Afiliado, Beneficiario>(consulta, (b, a) => { b.afiliado = a; return b; }, new { Identificacion = identificacion }).ToList();
+                List<Beneficiario> beneficiarios = conexionSql.Query<Beneficiario, Afiliado, Beneficiario>(consulta, (b, a) => { b.afiliado = a; return b; }, new { Identificacion = identificacion }).ToList();
                 beneficiario = beneficiarios.FirstOrDefault();
                 conexionSql.Close();
             }
@@ -190,7 +190,7 @@ namespace Polygamy.Data
                                   " INNER JOIN Persona p1 ON p1.id = a.idPersona" +
                                   " WHERE b.id = @IdBeneficiario";
 
-                List<Beneficiario> beneficiarios = beneficiarios = conexionSql.Query<Beneficiario, Afiliado, Beneficiario>(consulta, (b, a) => { b.afiliado = a; return b; }, new { IdBeneficiario = idBeneficiario }).ToList();
+                List<Beneficiario> beneficiarios = conexionSql.Query<Beneficiario, Afiliado, Beneficiario>(consulta, (b, a) => { b.afiliado = a; return b; }, new { IdBeneficiario = idBeneficiario }).ToList();
                 beneficiario = beneficiarios.FirstOrDefault();
                 conexionSql.Close();
             }

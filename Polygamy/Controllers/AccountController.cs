@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -43,9 +44,15 @@ namespace Polygamy.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public IActionResult Login(Usuario usuario, string returnUrl = null)
+        public IActionResult Login(IFormCollection collection, string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
+
+            Usuario usuario = new Usuario
+            {
+                contrasena = collection["contrasena"],
+                nombreUsuario = collection["nombreUsuario"],
+            };
 
             bool formatoContrasenaValida = usuario.comprobarContrasenaSegura();
             if (!formatoContrasenaValida)
@@ -62,7 +69,7 @@ namespace Polygamy.Controllers
             if (usuarioAlmacenado != null)
             {
                 _logger.LogInformation(1, "Usuario válido");
-                if (HttpContext.Session != null) HttpContext.Session.Set(SessionKeyName, usuario.nombreUsuario.ToLower());
+                HttpContext.Session?.Set(SessionKeyName, usuario.nombreUsuario.ToLower());
                 return RedirectToLocal(returnUrl);
             }
 

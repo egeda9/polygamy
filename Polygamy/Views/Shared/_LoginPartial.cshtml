@@ -1,7 +1,4 @@
-﻿@using Microsoft.AspNetCore.Identity
-@using Polygamy.Models
-
-@if (!string.IsNullOrEmpty(Context.Session.Get<string>("_NombreUsuario")))
+﻿@if (!string.IsNullOrEmpty(Context.Session.Get<string>("_NombreUsuario")))
 {
     var nombreUsuario = Context.Session.Get<string>("_NombreUsuario");
 

@@ -40,7 +40,7 @@ namespace Polygamy.Data
 
         public List<Supermercado> listar()
         {
-            List<Supermercado> supermercados = new List<Supermercado>();
+            List<Supermercado> supermercados;
             using (IDbConnection conexionSql = new SqlConnection(_databaseSettings.Value.defaultConnection))
             {
                 conexionSql.Open();

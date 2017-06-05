@@ -69,23 +69,19 @@ namespace Polygamy.Controllers
 
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message, ex);
+
                 ViewBag.Messages = new[] {
                     new AlertViewModel("danger", "Error en el proceso: ", ex.Message)
                 };
 
-                _logger.LogError(ex.Message, ex);
                 return View();
             }
         }
         
         public ActionResult Registrar(int idBeneficiario)
         {
-            var afiliados = _supermercadoGateway.listar().Select(s => new
-            {
-                Id = s.id,
-                NombreCompleto = string.Format("{0} - {1}", s.ciudad, s.direccion)
-            })
-            .ToList();
+            var afiliados = _supermercadoGateway.listar().Select(s => new { Id = s.id, NombreCompleto = string.Format("{0} - {1}", s.ciudad, s.direccion) }) .ToList();
 
             TempData["idBeneficiario"] = idBeneficiario;
             ViewBag.Supermercados = new SelectList(afiliados, "Id", "NombreCompleto");

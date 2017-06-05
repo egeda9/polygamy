@@ -19,7 +19,7 @@ namespace Polygamy.Data
 
         public List<Producto> listar()
         {
-            List<Producto> productos = new List<Producto>();
+            List<Producto> productos;
             using (IDbConnection conexionSql = new SqlConnection(_databaseSettings.Value.defaultConnection))
             {
                 conexionSql.Open();

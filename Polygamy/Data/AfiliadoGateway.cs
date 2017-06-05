@@ -54,7 +54,7 @@ namespace Polygamy.Data
         /// <param name="afiliado"></param>
         public bool crear(Afiliado afiliado)
         {
-            bool resultadoProceso = false;
+            bool resultadoProceso;
             try
             {
                 using (IDbConnection conexionSql = new SqlConnection(_databaseSettings.Value.defaultConnection))
@@ -93,7 +93,7 @@ namespace Polygamy.Data
 
         public List<Afiliado> listar()
         {
-            List<Afiliado> afiliados = new List<Afiliado>();
+            List<Afiliado> afiliados;
             using (IDbConnection conexionSql = new SqlConnection(_databaseSettings.Value.defaultConnection))
             {
                 conexionSql.Open();

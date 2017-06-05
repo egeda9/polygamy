@@ -26,7 +26,7 @@ namespace Polygamy.Data
         /// <param name="compraDetalle"></param>
         public bool crear(CompraDetalle compraDetalle)
         {
-            bool resultadoProceso = false;
+            int compraDetalleId = 0;
             try
             {
                 using (IDbConnection conexionSql = new SqlConnection(_databaseSettings.Value.defaultConnection))
@@ -38,20 +38,18 @@ namespace Polygamy.Data
 
                     using (IDbTransaction transaccion = conexionSql.BeginTransaction())
                     {
-                        int compraDetalleId = conexionSql.Query<int>(insertarCompra, new { IdProducto = compraDetalle.producto.id, Cantidad = compraDetalle.cantidad, IdCompra = compraDetalle.compra.id }, transaccion).Single();
+                        compraDetalleId = conexionSql.Query<int>(insertarCompra, new { IdProducto = compraDetalle.producto.id, Cantidad = compraDetalle.cantidad, IdCompra = compraDetalle.compra.id }, transaccion).Single();
                         transaccion.Commit();
                     }
                     conexionSql.Close();
-                    resultadoProceso = true;
                 }
             }
 
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message, ex);
-                resultadoProceso = false;
             }
-            return resultadoProceso;
+            return compraDetalleId > 0;
         }
 
         /// 
@@ -70,7 +68,7 @@ namespace Polygamy.Data
         /// <param name="compraId"></param>
         public List<CompraDetalle> listar(int compraId)
         {
-            List<CompraDetalle> comprasDetalle = new List<CompraDetalle>();
+            List<CompraDetalle> comprasDetalle;
             using (IDbConnection conexionSql = new SqlConnection(_databaseSettings.Value.defaultConnection))
             {
                 conexionSql.Open();

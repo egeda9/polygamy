@@ -91,7 +91,7 @@ namespace Polygamy.Data
         /// <param name="fechaInicio"></param>
         public List<Compra> obtener(DateTime fechaInicio, DateTime fechaFin)
         {
-            List<Compra> compras = new List<Compra>();
+            List<Compra> compras;
             using (IDbConnection conexionSql = new SqlConnection(_databaseSettings.Value.defaultConnection))
             {
                 conexionSql.Open();
